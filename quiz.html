@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EmoTeen - Quiz Emocional</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl\t font-bold">EmoTeen</h1>
+      <nav>
+        <ul class="flex space-x-4">
+          <li><a href="index.html" class="hover:underline">Home</a></li>
+          <li><a href="#sobre" class="hover:underline">Sobre</a></li>
+          <li><a href="login.html" class="hover:underline">Sair</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Quiz Section -->
+  <section class="py-16">
+    <div class="container mx-auto max-w-2xl text-center">
+      <h2 class="text-3xl font-bold mb-6 text-blue-600">Quiz Emocional</h2>
+      <p class="text-lg mb-8">Responda honestamente como você se sentiu nas últimas duas semanas. Suas respostas são confidenciais e nos ajudarão a apoiar seu bem-estar.</p>
+
+      <!-- Barra de Progresso -->
+      <div class="w-full bg-gray-200 rounded-full h-4 mb-8">
+        <div id="progress-bar" class="bg-blue-600 h-4 rounded-full" style="width: 0%"></div>
+      </div>
+
+      <!-- Formulário do Quiz -->
+      <form id="quiz-form" class="bg-white p-6 rounded-lg shadow-lg">
+        <div id="question-container">
+          <!-- Perguntas serão inseridas dinamicamente via JavaScript -->
+        </div>
+        <div class="mt-6 flex justify-between">
+          <button type="button" id="prev-button" class="bg-gray-400 text-white px-6 py-3 rounded-lg hover:bg-gray-500 transition hidden">Anterior</button>
+          <button type="button" id="next-button" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">Próxima</button>
+          <button type="submit" id="submit-button" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition hidden">Enviar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-6">
+    <div class="container mx-auto text-center">
+      <p>© 2025 EmoTeen. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script type="text/javascript">
+    // Dados do quiz (baseado em PHQ-9, GAD-7 e pergunta adicional)
+    const questions = [
+      // PHQ-9 (9 perguntas)
+      { id: 1, text: "Você tem se sentido com pouco interesse ou prazer em fazer coisas?", highRisk: false },
+      { id: 2, text: "Você tem se sentido triste, deprimido(a) ou sem esperança?", highRisk: false },
+      { id: 3, text: "Você tem tido dificuldade para dormir, seja para adormecer, continuar dormindo ou dormir demais?", highRisk: false },
+      { id: 4, text: "Você tem se sentido cansado(a) ou com pouca energia?", highRisk: false },
+      { id: 5, text: "Você tem tido pouco apetite ou comido demais?", highRisk: false },
+      { id: 6, text: "Você tem se sentido mal consigo mesmo(a), como se fosse um fracasso ou tivesse decepcionado sua família?", highRisk: false },
+      { id: 7, text: "Você tem tido dificuldade para se concentrar em coisas, como estudar ou assistir TV?", highRisk: false },
+      { id: 8, text: "Você tem se sentido muito lento(a) ou, ao contrário, muito agitado(a)?", highRisk: false },
+      { id: 9, text: "Você tem pensado em se machucar ou que seria melhor não estar mais aqui?", highRisk: true },
+      // GAD-7 (7 perguntas)
+      { id: 10, text: "Você tem se sentido nervoso(a), ansioso(a) ou no limite?", highRisk: false },
+      { id: 11, text: "Você tem sido incapaz de parar ou controlar suas preocupações?", highRisk: false },
+      { id: 12, text: "Você tem se preocupado demais com várias coisas?", highRisk: false },
+      { id: 13, text: "Você tem tido dificuldade para relaxar?", highRisk: false },
+      { id: 14, text: "Você tem se sentido tão inquieto(a) que é difícil ficar parado(a)?", highRisk: true },
+      { id: 15, text: "Você tem se sentido facilmente irritado(a) ou chateado(a)?", highRisk: false },
+      { id: 16, text: "Você tem sentido medo, como se algo horrível pudesse acontecer?", highRisk: true },
+      // Pergunta adicional (triagem de risco extremo)
+      { id: 17, text: "Você já pensou em acabar com sua vida ou se machucar de propósito?", highRisk: true },
+    ];
+
+    const options = [
+      { value: 0, text: "Nunca" },
+      { value: 1, text: "Vários dias" },
+      { value: 2, text: "Mais da metade dos dias" },
+      { value: 3, text: "Quase todos os dias" },
+    ];
+
+    // Perguntas de alto risco (8 no total: PHQ-9 #9, GAD-7 #14, #16, adicional #17, e 4 placeholders para peso extra)
+    const highRiskQuestions = [9, 14, 16, 17]; // IDs das perguntas de alto risco
+
+    let currentQuestion = 0;
+    const totalQuestions = questions.length;
+    const answers = {};
+
+    // Elementos do DOM
+    const questionContainer = document.getElementById('question-container');
+    const prevButton = document.getElementById('prev-button');
+    const nextButton = document.getElementById('next-button');
+    const submitButton = document.getElementById('submit-button');
+    const progressBar = document.getElementById('progress-bar');
+
+    // Função para renderizar a pergunta atual
+    function renderQuestion() {
+      const question = questions[currentQuestion];
+      questionContainer.innerHTML = `
+        <h3 class="text-xl font-semibold mb-4">Pergunta ${currentQuestion + 1} de ${totalQuestions}</h3>
+        <p class="text-lg mb-6">${question.text}</p>
+        <div class="space-y-4">
+          ${options
+            .map(
+              (option) => `
+                <label class="block">
+                  <input type="radio" name="question-${question.id}" value="${option.value}" class="mr-2" required>
+                  ${option.text}
+                </label>
+              `
+            )
+            .join('')}
+        </div>
+      `;
+
+      // Atualizar barra de progresso
+      progressBar.style.width = `${((currentQuestion + 1) / totalQuestions) * 100}%`;
+
+      // Mostrar/esconder botões
+      prevButton.classList.toggle('hidden', currentQuestion === 0);
+      nextButton.classList.toggle('hidden', currentQuestion === totalQuestions - 1);
+      submitButton.classList.toggle('hidden', currentQuestion !== totalQuestions - 1);
+    }
+
+    // Inicializar primeira pergunta
+    renderQuestion();
+
+    // Botão "Anterior"
+    prevButton.addEventListener('click', () => {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        renderQuestion();
+      }
+    });
+
+    // Botão "Próxima"
+    nextButton.addEventListener('click', () => {
+      const selected = document.querySelector(`input[name="question-${questions[currentQuestion].id}"]:checked`);
+      if (!selected) {
+        alert('Por favor, selecione uma resposta antes de continuar.');
+        return;
+      }
+      answers[questions[currentQuestion].id] = parseInt(selected.value);
+      if (currentQuestion < totalQuestions - 1) {
+        currentQuestion++;
+        renderQuestion();
+      }
+    });
+
+    // Enviar quiz
+    document.getElementById('quiz-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const selected = document.querySelector(`input[name="question-${questions[currentQuestion].id}"]:checked`);
+      if (!selected) {
+        alert('Por favor, selecione uma resposta antes de enviar.');
+        return;
+      }
+      answers[questions[currentQuestion].id] = parseInt(selected.value);
+
+      // Calcular pontuação
+      let totalScore = 0;
+      Object.keys(answers).forEach((questionId) => {
+        const score = answers[questionId];
+        // Dobrar o peso para perguntas de alto risco
+        totalScore += highRiskQuestions.includes(parseInt(questionId)) ? score * 2 : score;
+      });
+
+      // Verificar ideação suicida (PHQ-9 #9 ou pergunta adicional #17)
+      const hasSuicidalIdeation = answers[9] > 0 || answers[17] > 0;
+
+      // Determinar classificação
+      let classification, redirectUrl;
+      if (hasSuicidalIdeation || totalScore >= 36) {
+        classification = 'Vermelho (Risco)';
+        redirectUrl = 'dashboard_aluno_vermelho.html';
+      } else if (totalScore >= 21) {
+        classification = 'Amarelo (Atenção)';
+        redirectUrl = 'dashboard_aluno_amarelo.html';
+      } else {
+        classification = 'Verde (Estável)';
+        redirectUrl = 'dashboard_aluno_verde.html';
+      }
+
+      // Simulação de salvamento (Firebase será implementado depois)
+      console.log({
+        answers,
+        totalScore,
+        classification
+      });
+      alert(`Quiz concluído! Sua classificação: ${classification}.`);
+      window.location.href = redirectUrl;
+    });
+  </script>
+</body>
+</html>
