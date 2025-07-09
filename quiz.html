@@ -10,7 +10,7 @@
   <!-- Header -->
   <header class="bg-blue-600 text-white p-4">
     <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-2xl\t font-bold">EmoTeen</h1>
+      <h1 class="text-2xl font-bold">EmoTeen</h1>
       <nav>
         <ul class="flex space-x-4">
           <li><a href="index.html" class="hover:underline">Home</a></li>
@@ -23,24 +23,24 @@
 
   <!-- Quiz Section -->
   <section class="py-16">
-    <div class="container mx-auto max-w-2xl text-center">
-      <h2 class="text-3xl font-bold mb-6 text-blue-600">Quiz Emocional</h2>
-      <p class="text-lg mb-8">Responda honestamente como você se sentiu nas últimas duas semanas. Suas respostas são confidenciais e nos ajudarão a apoiar seu bem-estar.</p>
+    <div class="container mx-auto max-w-lg text-center">
+      <h2 class="text-3xl font-bold mb-4 text-blue-600">Quiz Emocional</h2>
+      <p class="text-base mb-4 text-gray-700">Responda honestamente como você se sentiu nas últimas duas semanas. Suas respostas são confidenciais e nos ajudarão a apoiar seu bem-estar.</p>
 
       <!-- Barra de Progresso -->
-      <div class="w-full bg-gray-200 rounded-full h-4 mb-8">
+      <div class="w-full bg-gray-200 rounded-full h-4 mb-6">
         <div id="progress-bar" class="bg-blue-600 h-4 rounded-full" style="width: 0%"></div>
       </div>
 
       <!-- Formulário do Quiz -->
-      <form id="quiz-form" class="bg-white p-6 rounded-lg shadow-lg">
+      <form id="quiz-form" class="bg-white p-4 rounded-lg shadow-lg">
         <div id="question-container">
           <!-- Perguntas serão inseridas dinamicamente via JavaScript -->
         </div>
-        <div class="mt-6 flex justify-between">
-          <button type="button" id="prev-button" class="bg-gray-400 text-white px-6 py-3 rounded-lg hover:bg-gray-500 transition hidden">Anterior</button>
-          <button type="button" id="next-button" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">Próxima</button>
-          <button type="submit" id="submit-button" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition hidden">Enviar</button>
+        <div class="mt-4 flex justify-between">
+          <button type="button" id="prev-button" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition hidden">Anterior</button>
+          <button type="button" id="next-button" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Próxima</button>
+          <button type="submit" id="submit-button" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition hidden">Enviar</button>
         </div>
       </form>
     </div>
@@ -54,7 +54,7 @@
   </footer>
 
   <script type="text/javascript">
-    // Dados do quiz (baseado em PHQ-9, GAD-7 e pergunta adicional)
+    // Dados do quiz
     const questions = [
       // PHQ-9 (9 perguntas)
       { id: 1, text: "Você tem se sentido com pouco interesse ou prazer em fazer coisas?", highRisk: false },
@@ -74,8 +74,26 @@
       { id: 14, text: "Você tem se sentido tão inquieto(a) que é difícil ficar parado(a)?", highRisk: true },
       { id: 15, text: "Você tem se sentido facilmente irritado(a) ou chateado(a)?", highRisk: false },
       { id: 16, text: "Você tem sentido medo, como se algo horrível pudesse acontecer?", highRisk: true },
-      // Pergunta adicional (triagem de risco extremo)
+      // Perguntas adicionais (19 perguntas)
       { id: 17, text: "Você já pensou em acabar com sua vida ou se machucar de propósito?", highRisk: true },
+      { id: 18, text: "Você tem se sentido isolado(a) ou distante de outras pessoas?", highRisk: false },
+      { id: 19, text: "Você tem tido dificuldade em manter amizades ou relações próximas?", highRisk: false },
+      { id: 20, text: "Você tem se sentido sobrecarregado(a) por responsabilidades escolares?", highRisk: false },
+      { id: 21, text: "Você tem experimentado crises de choro frequentes?", highRisk: true },
+      { id: 22, text: "Você tem sentido que sua vida não tem propósito ou significado?", highRisk: true },
+      { id: 23, text: "Você tem tido episódios de pânico ou ansiedade intensa?", highRisk: true },
+      { id: 24, text: "Você tem se sentido incapaz de enfrentar desafios diários?", highRisk: false },
+      { id: 25, text: "Você tem tido mudanças bruscas de humor?", highRisk: false },
+      { id: 26, text: "Você tem se sentido constantemente exausto(a), mesmo sem motivo aparente?", highRisk: false },
+      { id: 27, text: "Você tem tido pensamentos repetitivos sobre falhas ou erros?", highRisk: false },
+      { id: 28, text: "Você tem sentido dificuldade em tomar decisões simples?", highRisk: false },
+      { id: 29, text: "Você tem praticado ou pensado em automutilação?", highRisk: true },
+      { id: 30, text: "Você tem sentido que ninguém se importa com você?", highRisk: false },
+      { id: 31, text: "Você tem sofrido bullying ou provocações na escola ou online?", highRisk: false },
+      { id: 32, text: "Você tem sentido pressão excessiva de sua família para ter bom desempenho?", highRisk: false },
+      { id: 33, text: "Você tem se sentido pouco confiante em suas habilidades ou aparência?", highRisk: false },
+      { id: 34, text: "Você tem se sentido sozinho(a), mesmo estando com outras pessoas?", highRisk: false },
+      { id: 35, text: "Você tem sentido que nada que você faz é suficiente?", highRisk: false },
     ];
 
     const options = [
@@ -85,8 +103,8 @@
       { value: 3, text: "Quase todos os dias" },
     ];
 
-    // Perguntas de alto risco (8 no total: PHQ-9 #9, GAD-7 #14, #16, adicional #17, e 4 placeholders para peso extra)
-    const highRiskQuestions = [9, 14, 16, 17]; // IDs das perguntas de alto risco
+    // Perguntas de alto risco (8 no total)
+    const highRiskQuestions = [9, 14, 16, 17, 21, 22, 23, 29];
 
     let currentQuestion = 0;
     const totalQuestions = questions.length;
@@ -103,9 +121,9 @@
     function renderQuestion() {
       const question = questions[currentQuestion];
       questionContainer.innerHTML = `
-        <h3 class="text-xl font-semibold mb-4">Pergunta ${currentQuestion + 1} de ${totalQuestions}</h3>
-        <p class="text-lg mb-6">${question.text}</p>
-        <div class="space-y-4">
+        <h3 class="text-lg font-semibold mb-3">Pergunta ${currentQuestion + 1} de ${totalQuestions}</h3>
+        <p class="text-base mb-4">${question.text}</p>
+        <div class="space-y-3">
           ${options
             .map(
               (option) => `
@@ -167,19 +185,18 @@
       let totalScore = 0;
       Object.keys(answers).forEach((questionId) => {
         const score = answers[questionId];
-        // Dobrar o peso para perguntas de alto risco
         totalScore += highRiskQuestions.includes(parseInt(questionId)) ? score * 2 : score;
       });
 
-      // Verificar ideação suicida (PHQ-9 #9 ou pergunta adicional #17)
-      const hasSuicidalIdeation = answers[9] > 0 || answers[17] > 0;
+      // Verificar ideação suicida ou automutilação (perguntas 9, 17, 29)
+      const hasCriticalRisk = answers[9] > 0 || answers[17] > 0 || answers[29] > 0;
 
       // Determinar classificação
       let classification, redirectUrl;
-      if (hasSuicidalIdeation || totalScore >= 36) {
+      if (hasCriticalRisk || totalScore >= 81) {
         classification = 'Vermelho (Risco)';
         redirectUrl = 'dashboard_aluno_vermelho.html';
-      } else if (totalScore >= 21) {
+      } else if (totalScore >= 41) {
         classification = 'Amarelo (Atenção)';
         redirectUrl = 'dashboard_aluno_amarelo.html';
       } else {
