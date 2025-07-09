@@ -25,10 +25,10 @@
   <section id="home" class="bg-gradient-to-r from-blue-500 to-green-400 text-white py-20 text-center">
     <div class="container mx-auto">
       <h2 class="text-4xl font-bold mb-4">Bem-vindo ao EmoTeen</h2>
-      <p class="text-lg mb-6">Uma plataforma para apoiar a saúde emocional dos adolescentes.</p>
-      <div class="space-x-4">
-        <a href="quiz.html" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200">Fazer o Quiz Emocional</a>
-        <a href="login.html" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600">Acessar Dashboard</a>
+      <p class="text-lg mb-8">Uma plataforma para apoiar a saúde emocional dos adolescentes.</p>
+      <div class="flex flex-col space-y-4 max-w-md mx-auto">
+        <a href="quiz.html" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 w-full">Fazer o Quiz Emocional</a>
+        <a href="login.html" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 w-full">Acessar Dashboard</a>
       </div>
     </div>
   </section>
@@ -44,7 +44,7 @@
   <!-- Footer -->
   <footer class="bg-blue-600 text-white py-6">
     <div class="container mx-auto text-center">
-      <p>&copy; 2025 EmoTeen. Todos os direitos reservados.</p>
+      <p>© 2025 EmoTeen. Todos os direitos reservados.</p>
       <div class="mt-2">
         <a href="#" class="text-white hover:underline mx-2">Contato</a>
         <a href="#" class="text-white hover:underline mx-2">Termos de Uso</a>
@@ -52,5 +52,36 @@
       </div>
     </div>
   </footer>
+
+  <script type="text/javascript">
+    // Integração com Firebase (exemplo comentado)
+    /*
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      // Configuração do Firebase (inserir credenciais)
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Redirecionar com base no papel do usuário
+        if (user.role === 'gestor') {
+          window.location.href = 'dashboard_gestor.html';
+        } else if (user.role === 'psicologo') {
+          window.location.href = 'dashboard_psicologo.html';
+        } else if (user.role === 'aluno') {
+          // Redirecionar para o dashboard do aluno com base na classificação
+          const classification = user.classification || 'verde'; // Simulado
+          window.location.href = `dashboard_aluno_${classification.toLowerCase()}.html`;
+        }
+      }
+      // Se não logado, permanece na página inicial
+    });
+    */
+  </script>
 </body>
 </html>
