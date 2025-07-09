@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EmoTeen - Dashboard do Psicólogo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">EmoTeen</h1>
+      <nav>
+        <ul class="flex space-x-4">
+          <li><a href="index.html" class="hover:underline">Home</a></li>
+          <li><a href="#sobre" class="hover:underline">Sobre</a></li>
+          <li><a href="login.html" class="hover:underline">Sair</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Dashboard Section -->
+  <section class="py-16">
+    <div class="container mx-auto max-w-4xl text-center">
+      <h2 class="text-3xl font-bold mb-6 text-blue-600">Dashboard do Psicólogo</h2>
+      <p class="text-base mb-6 text-gray-700">Visão geral dos resultados dos alunos no Quiz Emocional (dados agregados e IDs anônimos, sem identificação pessoal).</p>
+
+      <!-- Filtros -->
+      <div class="mb-6 flex justify-center space-x-4">
+        <div>
+          <label for="ano-filter" class="text-sm font-medium text-gray-700">Ano Escolar:</label>
+          <select id="ano-filter" class="mt-1 p-2 border rounded-lg">
+            <option value="all">Todos</option>
+            <option value="8º Ano EF">8º Ano EF</option>
+            <option value="9º Ano EF">9º Ano EF</option>
+            <option value="1º Ano EM">1º Ano EM</option>
+            <option value="2º Ano EM">2º Ano EM</option>
+            <option value="3º Ano EM">3º Ano EM</option>
+          </select>
+        </div>
+        <div>
+          <label for="turno-filter" class="text-sm font-medium text-gray-700">Turno:</label>
+          <select id="turno-filter" class="mt-1 p-2 border rounded-lg">
+            <option value="all">Todos</option>
+            <option value="Manhã">Manhã</option>
+            <option value="Tarde">Tarde</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Contagens -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <!-- Verde -->
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <h3 class="text-xl font-semibold mb-2 text-gray-800">Alunos Estáveis (Verde)</h3>
+          <p class="text-4xl font-bold text-green-600 mb-4" id="green-cases-count">84</p>
+          <p class="text-base text-gray-600 mb-4">Alunos com sintomas leves ou ausentes.</p>
+          <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Ver Detalhes</button>
+        </div>
+        <!-- Amarelo -->
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <h3 class="text-xl font-semibold mb-2 text-gray-800">Alunos em Atenção (Amarelo)</h3>
+          <p class="text-4xl font-bold text-yellow-600 mb-4" id="yellow-cases-count">41</p>
+          <p class="text-base text-gray-600 mb-4">Alunos com sintomas moderados, recomendação de acompanhamento.</p>
+          <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Ver Detalhes</button>
+        </div>
+        <!-- Vermelho -->
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <h3 class="text-xl font-semibold mb-2 text-gray-800">Alunos com Risco (Vermelho)</h3>
+          <p class="text-4xl font-bold text-red-600 mb-4" id="red-cases-count">16</p>
+          <p class="text-base text-gray-600 mb-4">Alunos com alto risco, indicando necessidade de atenção imediata.</p>
+          <button type="button" id="red-details-button" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Ver Detalhes</button>
+        </div>
+      </div>
+
+      <!-- Gráfico -->
+      <div class="bg-white p-6 rounded-lg shadow-lg mb-6">
+        <h3 class="text-xl font-semibold mb-4 text-gray-800">Distribuição por Ano Escolar e Turno</h3>
+        <canvas id="cases-chart"></canvas>
+      </div>
+
+      <!-- Lista de IDs Anônimos (Vermelho) -->
+      <div class="bg-white p-6 rounded-lg shadow-lg" id="red-details-section" style="display: none;">
+        <h3 class="text-xl font-semibold mb-4 text-gray-800">Detalhes de Alunos com Risco (Vermelho)</h3>
+        <p class="text-base text-gray-600 mb-4">Lista de IDs anônimos para acompanhamento (sem identificação pessoal).</p>
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="p-2 border">ID Anônimo</th>
+              <th class="p-2 border">Ano Escolar</th>
+              <th class="p-2 border">Turno</th>
+            </tr>
+          </thead>
+          <tbody id="red-details-table"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-6">
+    <div class="container mx-auto text-center">
+      <p>© 2025 EmoTeen. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script type="text/javascript">
+    // Dados simulados (substituir por Firebase)
+    const data = {
+      'all': {
+        'all': {
+          '8º Ano EF': { green: 27, yellow: 14, red: 7 },
+          '9º Ano EF': { green: 24, yellow: 12, red: 5 },
+          '1º Ano EM': { green: 12, yellow: 6, red: 2 },
+          '2º Ano EM': { green: 11, yellow: 5, red: 1 },
+          '3º Ano EM': { green: 10, yellow: 4, red: 1 }
+        },
+        'Manhã': {
+          '8º Ano EF': { green: 15, yellow: 8, red: 4 },
+          '9º Ano EF': { green: 14, yellow: 7, red: 3 },
+          '1º Ano EM': { green: 12, yellow: 6, red: 2 },
+          '2º Ano EM': { green: 11, yellow: 5, red: 1 },
+          '3º Ano EM': { green: 10, yellow: 4, red: 1 }
+        },
+        'Tarde': {
+          '8º Ano EF': { green: 12, yellow: 6, red: 3 },
+          '9º Ano EF': { green: 10, yellow: 5, red: 2 }
+        }
+      },
+      '8º Ano EF': {
+        'all': { '8º Ano EF': { green: 27, yellow: 14, red: 7 } },
+        'Manhã': { '8º Ano EF': { green: 15, yellow: 8, red: 4 } },
+        'Tarde': { '8º Ano EF': { green: 12, yellow: 6, red: 3 } }
+      },
+      '9º Ano EF': {
+        'all': { '9º Ano EF': { green: 24, yellow: 12, red: 5 } },
+        'Manhã': { '9º Ano EF': { green: 14, yellow: 7, red: 3 } },
+        'Tarde': { '9º Ano EF': { green: 10, yellow: 5, red: 2 } }
+      },
+      '1º Ano EM': {
+        'all': { '1º Ano EM': { green: 12, yellow: 6, red: 2 } },
+        'Manhã': { '1º Ano EM': { green: 12, yellow: 6, red: 2 } },
+        'Tarde': { '1º Ano EM': { green: 0, yellow: 0, red: 0 } }
+      },
+      '2º Ano EM': {
+        'all': { '2º Ano EM': { green: 11, yellow: 5, red: 1 } },
+        'Manhã': { '2º Ano EM': { green: 11, yellow: 5, red: 1 } },
+        'Tarde': { '2º Ano EM': { green: 0, yellow: 0, red: 0 } }
+      },
+      '3º Ano EM': {
+        'all': { '3º Ano EM': { green: 10, yellow: 4, red: 1 } },
+        'Manhã': { '3º Ano EM': { green: 10, yellow: 4, red: 1 } },
+        'Tarde': { '3º Ano EM': { green: 0, yellow: 0, red: 0 } }
+      }
+    };
+
+    // IDs anônimos simulados para casos Vermelho
+    const redIds = {
+      '8º Ano EF': {
+        'Manhã': ['aluno001', 'aluno002', 'aluno003', 'aluno004'],
+        'Tarde': ['aluno005', 'aluno006', 'aluno007']
+      },
+      '9º Ano EF': {
+        'Manhã': ['aluno008', 'aluno009', 'aluno010'],
+        'Tarde': ['aluno011', 'aluno012']
+      },
+      '1º Ano EM': {
+        'Manhã': ['aluno013', 'aluno014']
+      },
+      '2º Ano EM': {
+        'Manhã': ['aluno015']
+      },
+      '3º Ano EM': {
+        'Manhã': ['aluno016']
+      }
+    };
+
+    // Elementos do DOM
+    const greenCasesCount = document.getElementById('green-cases-count');
+    const yellowCasesCount = document.getElementById('yellow-cases-count');
+    const redCasesCount = document.getElementById('red-cases-count');
+    const anoFilter = document.getElementById('ano-filter');
+    const turnoFilter = document.getElementById('turno-filter');
+    const redDetailsButton = document.getElementById('red-details-button');
+    const redDetailsSection = document.getElementById('red-details-section');
+    const redDetailsTable = document.getElementById('red-details-table');
+    const ctx = document.getElementById('cases-chart').getContext('2d');
+
+    // Gráfico
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['8º Ano EF', '9º Ano EF', '1º Ano EM', '2º Ano EM', '3º Ano EM'],
+        datasets: [
+          {
+            label: 'Verde (Estável)',
+            data: [27, 24, 12, 11, 10],
+            backgroundColor: '#22c55e',
+            borderColor: '#16a34a',
+            borderWidth: 1
+          },
+          {
+            label: 'Amarelo (Atenção)',
+            data: [14, 12, 6, 5, 4],
+            backgroundColor: '#eab308',
+            borderColor: '#ca8a04',
+            borderWidth: 1
+          },
+          {
+            label: 'Vermelho (Risco)',
+            data: [7, 5, 2, 1, 1],
+            backgroundColor: '#ef4444',
+            borderColor: '#dc2626',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Quantidade de Alunos' }
+          },
+          x: {
+            title: { display: true, text: 'Ano Escolar' }
+          }
+        },
+        plugins: {
+          legend: { position: 'top' },
+          title: { display: false }
+        }
+      }
+    });
+
+    // Atualizar contagens, gráfico e lista de IDs
+    function updateDashboard(ano = 'all', turno = 'all') {
+      // Validar turno para anos do Ensino Médio
+      if (['1º Ano EM', '2º Ano EM', '3º Ano EM'].includes(ano) && turno === 'Tarde') {
+        alert('Os anos do Ensino Médio estão disponíveis apenas no turno Manhã.');
+        turnoFilter.value = 'Manhã';
+        turno = 'Manhã';
+      }
+
+      // Obter dados filtrados
+      const filteredData = data[ano][turno];
+      let greenTotal = 0, yellowTotal = 0, redTotal = 0;
+      const labels = ano === 'all' ? Object.keys(filteredData).filter(a => 
+        turno === 'all' || 
+        (turno === 'Manhã' && ['8º Ano EF', '9º Ano EF', '1º Ano EM', '2º Ano EM', '3º Ano EM'].includes(a)) ||
+        (turno === 'Tarde' && ['8º Ano EF', '9º Ano EF'].includes(a))
+      ) : [ano];
+      const greenData = [], yellowData = [], redData = [];
+
+      // Calcular contagens e atualizar dados do gráfico
+      for (const a of labels) {
+        greenTotal += filteredData[a].green;
+        yellowTotal += filteredData[a].yellow;
+        redTotal += filteredData[a].red;
+        greenData.push(filteredData[a].green);
+        yellowData.push(filteredData[a].yellow);
+        redData.push(filteredData[a].red);
+      }
+
+      // Atualizar contagens
+      greenCasesCount.textContent = greenTotal;
+      yellowCasesCount.textContent = yellowTotal;
+      redCasesCount.textContent = redTotal;
+
+      // Atualizar gráfico
+      chart.data.labels = labels;
+      chart.data.datasets[0].data = greenData;
+      chart.data.datasets[1].data = yellowData;
+      chart.data.datasets[2].data = redData;
+      chart.update();
+
+      // Atualizar lista de IDs anônimos (Vermelho)
+      redDetailsTable.innerHTML = '';
+      if (redTotal > 0) {
+        let ids = [];
+        if (ano === 'all') {
+          if (turno === 'all') {
+            for (const a in redIds) {
+              for (const t in redIds[a]) {
+                ids = ids.concat(redIds[a][t].map(id => ({ id, ano: a, turno: t })));
+              }
+            }
+          } else {
+            for (const a in redIds) {
+              if (redIds[a][turno] && (turno === 'Manhã' || ['8º Ano EF', '9º Ano EF'].includes(a))) {
+                ids = ids.concat(redIds[a][turno].map(id => ({ id, ano: a, turno })));
+              }
+            }
+          }
+        } else {
+          if (turno === 'all') {
+            for (const t in redIds[ano]) {
+              ids = ids.concat(redIds[ano][t].map(id => ({ id, ano, turno: t })));
+            }
+          } else {
+            if (redIds[ano][turno]) {
+              ids = ids.concat(redIds[ano][turno].map(id => ({ id, ano, turno })));
+            }
+          }
+        }
+        ids.forEach(({ id, ano, turno }) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td class="p-2 border">${id}</td>
+            <td class="p-2 border">${ano}</td>
+            <td class="p-2 border">${turno}</td>
+          `;
+          redDetailsTable.appendChild(row);
+        });
+        redDetailsSection.style.display = ids.length > 0 ? 'block' : 'none';
+      } else {
+        redDetailsSection.style.display = 'none';
+      }
+    }
+
+    // Event listeners para filtros
+    anoFilter.addEventListener('change', () => {
+      updateDashboard(anoFilter.value, turnoFilter.value);
+    });
+    turnoFilter.addEventListener('change', () => {
+      updateDashboard(anoFilter.value, turnoFilter.value);
+    });
+
+    // Ação dos botões "Ver Detalhes"
+    document.querySelectorAll('.bg-blue-600').forEach(button => {
+      if (button.id === 'red-details-button') {
+        button.addEventListener('click', () => {
+          redDetailsSection.style.display = redDetailsSection.style.display === 'none' ? 'block' : 'none';
+        });
+      } else {
+        button.addEventListener('click', () => {
+          alert('Funcionalidade em desenvolvimento: exibir lista anônima de alunos por classificação.');
+        });
+      }
+    });
+
+    // Inicializar com todos os dados
+    updateDashboard();
+
+    // Integração com Firebase (exemplo comentado)
+    /*
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      // Configuração do Firebase (inserir suas credenciais)
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user && user.role === 'psicologo') {
+        const qGreen = query(collection(db, 'quizzes'), where('classification', '==', 'Verde'));
+        const qYellow = query(collection(db, 'quizzes'), where('classification', '==', 'Amarelo'));
+        const qRed = query(collection(db, 'quizzes'), where('classification', '==', 'Vermelho'));
+        const [greenSnap, yellowSnap, redSnap] = await Promise.all([getDocs(qGreen), getDocs(qYellow), getDocs(qRed)]);
+        greenCasesCount.textContent = greenSnap.size;
+        yellowCasesCount.textContent = yellowSnap.size;
+        redCasesCount.textContent = redSnap.size;
+
+        // Dados para o gráfico e IDs com filtros
+        const q = query(collection(db, 'quizzes'));
+        const querySnapshot = await getDocs(q);
+        const chartData = {};
+        const redIds = {};
+        querySnapshot.forEach(doc => {
+          const { userId, anoEscolar, turno, classification } = doc.data();
+          if (!chartData[anoEscolar]) chartData[anoEscolar] = { Manhã: { green: 0, yellow: 0, red: 0 }, Tarde: { green: 0, yellow: 0, red: 0 } };
+          chartData[anoEscolar][turno][classification.toLowerCase()]++;
+          if (classification === 'Vermelho') {
+            if (!redIds[anoEscolar]) redIds[anoEscolar] = { Manhã: [], Tarde: [] };
+            redIds[anoEscolar][turno].push(userId);
+          }
+        });
+        // Atualizar gráfico e lista de IDs com chartData e redIds
+      } else {
+        alert('Acesso negado. Apenas psicólogos podem acessar esta página.');
+        window.location.href = 'login.html';
+      }
+    });
+    */
+  </script>
+</body>
+</html>
