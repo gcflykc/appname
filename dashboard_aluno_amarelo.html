@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EmoTeen - Dashboard do Aluno (Amarelo)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">EmoTeen</h1>
+      <nav>
+        <ul class="flex space-x-4">
+          <li><a href="index.html" class="hover:underline">Home</a></li>
+          <li><a href="#sobre" class="hover:underline">Sobre</a></li>
+          <li><a href="login.html" class="hover:underline">Sair</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Dashboard Section -->
+  <section class="py-16">
+    <div class="container mx-auto max-w-4xl text-center">
+      <h2 class="text-3xl font-bold mb-6 text-blue-600">Bem-vindo ao seu Dashboard, <span id="aluno-nome">Maria Oliveira</span>!</h2>
+      <p class="text-base mb-6 text-gray-700">Aqui você pode ver seu perfil e registrar como está se sentindo hoje.</p>
+
+      <!-- Perfil -->
+      <div class="bg-white p-6 rounded-lg shadow-lg mb-6 border-l-4 border-yellow-600">
+        <h3 class="text-xl font-semibold mb-2 text-gray-800">Seu Perfil</h3>
+        <p class="text-lg text-gray-600">Nome: <span id="aluno-nome-display">Maria Oliveira</span></p>
+        <p class="text-lg text-gray-600">Série: <span id="aluno-serie">9º Ano EF</span></p>
+        <p class="text-lg text-gray-600">Turno: <span id="aluno-turno">Tarde</span></p>
+        <p class="text-lg text-yellow-600 mt-2">Classificação: Atenção (Amarelo)</p>
+        <p class="text-base text-gray-600 mt-2">Está tudo bem? Que tal agendar uma conversa com um profissional?</p>
+        <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition mt-4">Agendar Sessão</button>
+      </div>
+
+      <!-- Espaço do Humor -->
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-semibold mb-4 text-gray-800">Espaço do Humor: Como você se sente hoje?</h3>
+        <form id="mood-form" class="space-y-4">
+          <div>
+            <label for="mood-select" class="text-sm font-medium text-gray-700">Selecione seu humor:</label>
+            <select id="mood-select" class="mt-1 p-2 border rounded-lg w-full max-w-md mx-auto">
+              <option value="" disabled selected>Escolha uma opção</option>
+              <option value="Feliz">Feliz</option>
+              <option value="Neutro">Neutro</option>
+              <option value="Triste">Triste</option>
+              <option value="Ansioso">Ansioso</option>
+              <option value="Outros">Outros</option>
+            </select>
+          </div>
+          <div>
+            <label for="mood-description" class="text-sm font-medium text-gray-700">Descreva como está se sentindo (opcional):</label>
+            <textarea id="mood-description" class="mt-1 p-2 border rounded-lg w-full max-w-md mx-auto" rows="4" maxlength="500" placeholder="Ex.: Estou me sentindo bem hoje!"></textarea>
+          </div>
+          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Enviar</button>
+        </form>
+        <p id="mood-feedback" class="text-base text-yellow-600 mt-4 hidden">Humor registrado com sucesso!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-6">
+    <div class="container mx-auto text-center">
+      <p>© 2025 EmoTeen. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script type="text/javascript">
+    // Dados simulados do aluno (substituir por Firebase Auth)
+    const alunoData = {
+      userId: 'aluno085',
+      nome: 'Maria Oliveira',
+      anoEscolar: '9º Ano EF',
+      turno: 'Tarde',
+      classification: 'Amarelo'
+    };
+
+    // Array simulado para armazenar humores (substituir por Firestore)
+    let moods = [];
+
+    // Elementos do DOM
+    const alunoNome = document.getElementById('aluno-nome');
+    const alunoNomeDisplay = document.getElementById('aluno-nome-display');
+    const alunoSerie = document.getElementById('aluno-serie');
+    const alunoTurno = document.getElementById('aluno-turno');
+    const moodForm = document.getElementById('mood-form');
+    const moodSelect = document.getElementById('mood-select');
+    const moodDescription = document.getElementById('mood-description');
+    const moodFeedback = document.getElementById('mood-feedback');
+
+    // Preencher perfil
+    alunoNome.textContent = alunoData.nome;
+    alunoNomeDisplay.textContent = alunoData.nome;
+    alunoSerie.textContent = alunoData.anoEscolar;
+    alunoTurno.textContent = alunoData.turno;
+
+    // Enviar humor
+    moodForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const mood = moodSelect.value;
+      const description = moodDescription.value.trim();
+
+      if (!mood) {
+        alert('Por favor, selecione um humor.');
+        return;
+      }
+
+      // Criar registro de humor
+      const moodEntry = {
+        userId: alunoData.userId,
+        anoEscolar: alunoData.anoEscolar,
+        turno: alunoData.turno,
+        mood,
+        description,
+        timestamp: new Date().toISOString(),
+        classification: alunoData.classification
+      };
+
+      // Simular envio para o psicólogo (futuro Firestore)
+      moods.push(moodEntry);
+      console.log('Humor registrado:', moodEntry);
+
+      // Feedback
+      moodFeedback.classList.remove('hidden');
+      setTimeout(() => moodFeedback.classList.add('hidden'), 3000);
+
+      // Limpar formulário
+      moodSelect.value = '';
+      moodDescription.value = '';
+    });
+
+    // Botão Agendar Sessão (simulado)
+    document.querySelector('.bg-blue-600:not(#mood-form button)').addEventListener('click', () => {
+      alert('Funcionalidade em desenvolvimento: agendamento de sessão com psicólogo.');
+    });
+
+    // Integração com Firebase (exemplo comentado)
+    /*
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      // Configuração do Firebase (inserir credenciais)
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user && user.role === 'aluno') {
+        alunoNome.textContent = user.displayName;
+        alunoNomeDisplay.textContent = user.displayName;
+        alunoSerie.textContent = user.anoEscolar || 'Não informado';
+        alunoTurno.textContent = user.turno || 'Não informado';
+
+        moodForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const mood = moodSelect.value;
+          const description = moodDescription.value.trim();
+
+          if (!mood) {
+            alert('Por favor, selecione um humor.');
+            return;
+          }
+
+          try {
+            await addDoc(collection(db, 'moods'), {
+              userId: user.uid,
+              anoEscolar: user.anoEscolar,
+              turno: user.turno,
+              mood,
+              description,
+              timestamp: new Date().toISOString(),
+              classification: user.classification || 'Amarelo'
+            });
+            moodFeedback.classList.remove('hidden');
+            setTimeout(() => moodFeedback.classList.add('hidden'), 3000);
+            moodSelect.value = '';
+            moodDescription.value = '';
+          } catch (error) {
+            console.error('Erro ao registrar humor:', error);
+            alert('Erro ao registrar humor. Tente novamente.');
+          }
+        });
+      } else {
+        alert('Acesso negado. Apenas alunos podem acessar esta página.');
+        window.location.href = 'login.html';
+      }
+    });
+    */
+  </script>
+</body>
+</html>
