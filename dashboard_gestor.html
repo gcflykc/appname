@@ -113,6 +113,31 @@
           '8º Ano EF': { green: 12, yellow: 6, red: 3 },
           '9º Ano EF': { green: 10, yellow: 5, red: 2 }
         }
+      },
+      '8º Ano EF': {
+        'all': { '8º Ano EF': { green: 27, yellow: 14, red: 7 } },
+        'Manhã': { '8º Ano EF': { green: 15, yellow: 8, red: 4 } },
+        'Tarde': { '8º Ano EF': { green: 12, yellow: 6, red: 3 } }
+      },
+      '9º Ano EF': {
+        'all': { '9º Ano EF': { green: 24, yellow: 12, red: 5 } },
+        'Manhã': { '9º Ano EF': { green: 14, yellow: 7, red: 3 } },
+        'Tarde': { '9º Ano EF': { green: 10, yellow: 5, red: 2 } }
+      },
+      '1º Ano EM': {
+        'all': { '1º Ano EM': { green: 12, yellow: 6, red: 2 } },
+        'Manhã': { '1º Ano EM': { green: 12, yellow: 6, red: 2 } },
+        'Tarde': { '1º Ano EM': { green: 0, yellow: 0, red: 0 } }
+      },
+      '2º Ano EM': {
+        'all': { '2º Ano EM': { green: 11, yellow: 5, red: 1 } },
+        'Manhã': { '2º Ano EM': { green: 11, yellow: 5, red: 1 } },
+        'Tarde': { '2º Ano EM': { green: 0, yellow: 0, red: 0 } }
+      },
+      '3º Ano EM': {
+        'all': { '3º Ano EM': { green: 10, yellow: 4, red: 1 } },
+        'Manhã': { '3º Ano EM': { green: 10, yellow: 4, red: 1 } },
+        'Tarde': { '3º Ano EM': { green: 0, yellow: 0, red: 0 } }
       }
     };
 
@@ -180,9 +205,14 @@
         turno = 'Manhã';
       }
 
-      let greenTotal = 0, yellowTotal = 0, redTotal = 0;
+      // Obter dados filtrados
       const filteredData = data[ano][turno];
-      const labels = ano === 'all' ? Object.keys(filteredData) : [ano];
+      let greenTotal = 0, yellowTotal = 0, redTotal = 0;
+      const labels = ano === 'all' ? Object.keys(filteredData).filter(a => 
+        turno === 'all' || 
+        (turno === 'Manhã' && ['8º Ano EF', '9º Ano EF', '1º Ano EM', '2º Ano EM', '3º Ano EM'].includes(a)) ||
+        (turno === 'Tarde' && ['8º Ano EF', '9º Ano EF'].includes(a))
+      ) : [ano];
       const greenData = [], yellowData = [], redData = [];
 
       for (const a of labels) {
@@ -194,10 +224,12 @@
         redData.push(filteredData[a].red);
       }
 
+      // Atualizar contagens
       greenCasesCount.textContent = greenTotal;
       yellowCasesCount.textContent = yellowTotal;
       redCasesCount.textContent = redTotal;
 
+      // Atualizar gráfico
       chart.data.labels = labels;
       chart.data.datasets[0].data = greenData;
       chart.data.datasets[1].data = yellowData;
