@@ -28,8 +28,8 @@
       <p class="text-base mb-4 text-gray-700">Responda honestamente como você se sentiu nas últimas duas semanas. Suas respostas são confidenciais e nos ajudarão a apoiar seu bem-estar.</p>
 
       <!-- Barra de Progresso -->
-      <div class="w-full bg-gray-200 rounded-full h-4 mb-6">
-        <div id="progress-bar" class="bg-blue-600 h-4 rounded-full" style="width: 0%"></div>
+      <div class="w-full max-w-md mx-auto bg-gray-200 rounded-full h-2.5 mb-4">
+        <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
       </div>
 
       <!-- Formulário do Quiz -->
@@ -37,8 +37,10 @@
         <div id="question-container">
           <!-- Perguntas serão inseridas dinamicamente via JavaScript -->
         </div>
-        <div class="mt-4 flex justify-between">
+        <div class="mt-4 flex justify-between flex-wrap gap-2">
           <button type="button" id="prev-button" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition hidden">Anterior</button>
+          <button type="button" id="save-progress-button" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition">Salvar Progresso</button>
+          <button type="button" id="reset-button" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">Reiniciar Quiz</button>
           <button type="button" id="next-button" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Próxima</button>
           <button type="submit" id="submit-button" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition hidden">Enviar</button>
         </div>
@@ -108,14 +110,29 @@
 
     let currentQuestion = 0;
     const totalQuestions = questions.length;
-    const answers = {};
+    let answers = {};
 
     // Elementos do DOM
     const questionContainer = document.getElementById('question-container');
     const prevButton = document.getElementById('prev-button');
     const nextButton = document.getElementById('next-button');
     const submitButton = document.getElementById('submit-button');
+    const saveProgressButton = document.getElementById('save-progress-button');
+    const resetButton = document.getElementById('reset-button');
     const progressBar = document.getElementById('progress-bar');
+
+    // Carregar progresso salvo (simulação com localStorage)
+    function loadProgress() {
+      const savedAnswers = localStorage.getItem('quizProgress');
+      if (savedAnswers) {
+        answers = JSON.parse(savedAnswers);
+        currentQuestion = Object.keys(answers).length;
+        if (currentQuestion >= totalQuestions) {
+          currentQuestion = totalQuestions - 1;
+        }
+        renderQuestion();
+      }
+    }
 
     // Função para renderizar a pergunta atual
     function renderQuestion() {
@@ -128,7 +145,7 @@
             .map(
               (option) => `
                 <label class="block">
-                  <input type="radio" name="question-${question.id}" value="${option.value}" class="mr-2" required>
+                  <input type="radio" name="question-${question.id}" value="${option.value}" class="mr-2" ${answers[question.id] === option.value ? 'checked' : ''} required>
                   ${option.text}
                 </label>
               `
@@ -144,10 +161,11 @@
       prevButton.classList.toggle('hidden', currentQuestion === 0);
       nextButton.classList.toggle('hidden', currentQuestion === totalQuestions - 1);
       submitButton.classList.toggle('hidden', currentQuestion !== totalQuestions - 1);
+      saveProgressButton.classList.toggle('hidden', currentQuestion === totalQuestions - 1);
     }
 
-    // Inicializar primeira pergunta
-    renderQuestion();
+    // Inicializar primeira pergunta ou carregar progresso
+    loadProgress();
 
     // Botão "Anterior"
     prevButton.addEventListener('click', () => {
@@ -167,6 +185,26 @@
       answers[questions[currentQuestion].id] = parseInt(selected.value);
       if (currentQuestion < totalQuestions - 1) {
         currentQuestion++;
+        renderQuestion();
+      }
+    });
+
+    // Botão "Salvar Progresso"
+    saveProgressButton.addEventListener('click', () => {
+      const selected = document.querySelector(`input[name="question-${questions[currentQuestion].id}"]:checked`);
+      if (selected) {
+        answers[questions[currentQuestion].id] = parseInt(selected.value);
+      }
+      localStorage.setItem('quizProgress', JSON.stringify(answers));
+      alert('Progresso salvo com sucesso! Você pode continuar de onde parou.');
+    });
+
+    // Botão "Reiniciar Quiz"
+    resetButton.addEventListener('click', () => {
+      if (confirm('Tem certeza que deseja reiniciar o quiz? Todo o progresso será perdido.')) {
+        answers = {};
+        currentQuestion = 0;
+        localStorage.removeItem('quizProgress');
         renderQuestion();
       }
     });
@@ -203,6 +241,9 @@
         classification = 'Verde (Estável)';
         redirectUrl = 'dashboard_aluno_verde.html';
       }
+
+      // Limpar progresso salvo
+      localStorage.removeItem('quizProgress');
 
       // Simulação de salvamento (Firebase será implementado depois)
       console.log({
