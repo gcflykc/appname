@@ -1,128 +1,155 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head> 
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EmoTeen - Cadastro</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom styles for additional polish */
+    body {
+      background: linear-gradient(to bottom, #f3f4f6, #e5e7eb);
+    }
+    .form-container {
+      background: white;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border-radius: 1rem;
+    }
+    .input-field {
+      transition: all 0.3s ease;
+    }
+    .input-field:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+    .btn-primary {
+      background: linear-gradient(to right, #2563eb, #1e40af);
+      transition: transform 0.2s ease, background 0.3s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(to right, #1e40af, #2563eb);
+    }
+  </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="min-h-screen flex flex-col font-sans">
   <!-- Header -->
-  <header class="bg-blue-600 text-white p-4">
-    <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-2xl font-bold">EmoTeen</h1>
+  <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-6 shadow-lg">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <h1 class="text-3xl font-extrabold tracking-tight">EmoTeen</h1>
       <nav>
-        <ul class="flex space-x-4">
-          <li><a href="index.html" class="hover:underline">Home</a></li>
-          <li><a href="#sobre" class="hover:underline">Sobre</a></li>
-          <li><a href="login.html" class="hover:underline">Login</a></li>
+        <ul class="flex space-x-6 text-sm font-medium">
+          <li><a href="index.html" class="hover:text-blue-200 transition">Home</a></li>
+          <li><a href="#sobre" class="hover:text-blue-200 transition">Sobre</a></li>
+          <li><a href="login.html" class="hover:text-blue-200 transition">Login</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <!-- Cadastro Section -->
-  <section class="py-16">
-    <div class="container mx-auto max-w-md text-center">
-      <h2 class="text-3xl font-bold mb-6 text-blue-600">Crie sua conta</h2>
-      <p class="text-lg mb-8">Preencha os dados abaixo para se cadastrar como aluno:</p>
+  <main class="flex-grow flex items-center justify-center py-12 px-4">
+    <div class="form-container max-w-lg w-full p-8">
+      <h2 class="text-4xl font-bold text-center text-blue-600 mb-4">Crie sua conta</h2>
+      <p class="text-center text-gray-600 mb-8">Preencha os dados abaixo para se cadastrar como aluno:</p>
 
       <!-- Formulário de Cadastro -->
-      <form id="register-form" class="bg-white p-6 rounded-lg shadow-lg">
-        <div class="mb-4">
-          <label for="nome" class="block text-left text-gray-700 font-semibold">Nome completo</label>
-          <input type="text" id="nome" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      <form id="register-form" class="space-y-6">
+        <div>
+          <label for="nome" class="block text-sm font-semibold text-gray-700 mb-1">Nome completo</label>
+          <input type="text" id="nome" class="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none" required>
         </div>
-        <div class="mb-4">
-          <label for="escola" class="block text-left text-gray-700 font-semibold">Escola</label>
-          <input type="text" id="escola" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        <div>
+          <label for="escola" class="block text-sm font-semibold text-gray-700 mb-1">Escola</label>
+          <input type="text" id="escola" class="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none" required>
         </div>
-        <div class="mb-4">
-          <label for="turma" class="block text-left text-gray-700 font-semibold">Turma</label>
-          <input type="text" id="turma" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        <div>
+          <label for="turma" class="block text-sm font-semibold text-gray-700 mb-1">Turma</label>
+          <input type="text" id="turma" class="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none" required>
         </div>
-        <div class="mb-4">
-          <label for="turno" class="block text-left text-gray-700 font-semibold">Turno</label>
-          <select id="turno" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        <div>
+          <label for="turno" class="block text-sm font-semibold text-gray-700 mb-1">Turno</label>
+          <select id="turno" class="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none" required>
             <option value="" disabled selected>Selecione o turno</option>
             <option value="manhã">Manhã</option>
             <option value="tarde">Tarde</option>
             <option value="noite">Noite</option>
           </select>
         </div>
-        <div class="mb-4">
-          <label for="email" class="block text-left text-gray-700 font-semibold">E-mail</label>
-          <input type="email" id="email" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        <div>
+          <label for="email" class="block text-sm font-semibold text-gray-700 mb-1">E-mail</label>
+          <input type="email" id="email" class="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none" required>
         </div>
-        <div class="mb-4">
-          <label for="telefone" class="block text-left text-gray-700 font-semibold">Telefone do aluno</label>
-          <input type="tel" id="telefone" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ex.: 11999128663" required>
-          <p class="text-sm text-gray-500 mt-1 text-left">Digite apenas números, preferencialmente 10 ou 11 dígitos.</p>
+        <div>
+          <label for="telefone" class="block text-sm font-semibold text-gray-700 mb-1">Telefone do aluno</label>
+          <input type="tel" id="telefone" class="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none" placeholder="Ex.: 11999128663" required>
+          <p class="text-xs text-gray-500 mt-1">Digite apenas números, preferencialmente 10 ou 11 dígitos.</p>
         </div>
-        <div class="mb-4">
-          <label for="telefone-responsavel" class="block text-left text-gray-700 font-semibold">Telefone do responsável</label>
-          <input type="tel" id="telefone-responsavel" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ex.: 11934246190" required>
-          <p class="text-sm text-gray-500 mt-1 text-left">Digite apenas números, preferencialmente 10 ou 11 dígitos.</p>
+        <div>
+          <label for="telefone-responsavel" class="block text-sm font-semibold text-gray-700 mb-1">Telefone do responsável</label>
+          <input type="tel" id="telefone-responsavel" class="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none" placeholder="Ex.: 11934246190" required>
+          <p class="text-xs text-gray-500 mt-1">Digite apenas números, preferencialmente 10 ou 11 dígitos.</p>
         </div>
-        <div class="mb-4">
-          <label for="password" class="block text-left text-gray-700 font-semibold">Senha</label>
-          <input type="password" id="password" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        <div>
+          <label for="password" class="block text-sm font-semibold text-gray-700 mb-1">Senha</label>
+          <input type="password" id="password" class="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none" required>
         </div>
-        <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition">Cadastrar</button>
-        <div class="mt-4">
-          <a href="login.html" class="text-blue-600 hover:underline">Já tem uma conta? Faça login</a>
-        </div>
+        <button type="submit" class="btn-primary w-full py-3 rounded-lg text-white font-semibold">Cadastrar</button>
+        <p class="text-center text-sm text-gray-600">
+          Já tem uma conta? <a href="login.html" class="text-blue-600 hover:underline">Faça login</a>
+        </p>
       </form>
     </div>
-  </section>
+  </main>
 
   <!-- Footer -->
-  <footer class="bg-blue-600 text-white py-6">
-    <div class="container mx-auto text-center">
-      <p>© 2025 EmoTeen. Todos os direitos reservados.</p>
+  <footer class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-6">
+    <div class="container mx-auto px-4 text-center">
+      <p class="text-sm">© 2025 EmoTeen. Todos os direitos reservados.</p>
     </div>
   </footer>
 
   <script type="text/javascript">
-  // Validação do formulário
-  const registerForm = document.getElementById('register-form');
+    // Form validation
+    const registerForm = document.getElementById('register-form');
 
-  registerForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const nome = document.getElementById('nome').value;
-    const escola = document.getElementById('escola').value;
-    const turma = document.getElementById('turma').value;
-    const turno = document.getElementById('turno').value;
-    const email = document.getElementById('email').value;
-    const telefone = document.getElementById('telefone').value;
-    const telefoneResponsavel = document.getElementById('telefone-responsavel').value;
-    const password = document.getElementById('password').value;
+    registerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nome = document.getElementById('nome').value;
+      const escola = document.getElementById('escola').value;
+      const turma = document.getElementById('turma').value;
+      const turno = document.getElementById('turno').value;
+      const email = document.getElementById('email').value;
+      const telefone = document.getElementById('telefone').value;
+      const telefoneResponsavel = document.getElementById('telefone-responsavel').value;
+      const password = document.getElementById('password').value;
 
-    // Validação do telefone (apenas números, mínimo 10 dígitos recomendado)
-    const phoneRegex = /^[0-9]+$/;
-    if (!phoneRegex.test(telefone) || !phoneRegex.test(telefoneResponsavel)) {
-      alert('Os números de telefone devem conter apenas dígitos.');
-      return;
-    }
-    if (telefone.length < 10 || telefoneResponsavel.length < 10) {
-      alert('Os números de telefone devem ter pelo menos 10 dígitos para serem válidos.');
-      return;
-    }
+      // Phone number validation (digits only, minimum 10 digits recommended)
+      const phoneRegex = /^[0-9]+$/;
+      if (!phoneRegex.test(telefone) || !phoneRegex.test(telefoneResponsavel)) {
+        alert('Os números de telefone devem conter apenas dígitos.');
+        return;
+      }
+      if (telefone.length < 10 || telefoneResponsavel.length < 10) {
+        alert('Os números de telefone devem ter pelo menos 10 dígitos para serem válidos.');
+        return;
+      }
 
-    // Simulação de cadastro (Firebase será implementado depois)
-    console.log({
-      nome,
-      escola,
-      turma,
-      turno,
-      email,
-      telefone,
-      telefoneResponsavel,
-      password
+      // Simulate registration (Firebase to be implemented later)
+      console.log({
+        nome,
+        escola,
+        turma,
+        turno,
+        email,
+        telefone,
+        telefoneResponsavel,
+        password
+      });
+      alert('Cadastro realizado com sucesso! Você será redirecionado para o quiz.');
+      window.location.href = 'quiz.html';
     });
-    alert('Cadastro realizado com sucesso! Você será redirecionado para o quiz.');
-    window.location.href = 'quiz.html';
-  });
-</script>
+  </script>
 </body>
 </html>
