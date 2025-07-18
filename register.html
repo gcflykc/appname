@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -19,13 +19,11 @@
       </nav>
     </div>
   </header>
-
   <section class="py-16">
     <div class="container mx-auto max-w-lg text-center">
       <h2 class="text-3xl font-bold mb-4 text-blue-600">Bem-vindo ao EmoTeen</h2>
       <p class="text-base mb-4 text-gray-700">Faça seu cadastro e o quiz para se conectar aos melhores terapeutas e apoiar sua saúde emocional.</p>
       <p class="text-base mb-6 text-gray-700">Com poucos cliques, você acessa uma plataforma dedicada ao bem-estar com propósito e cultura.</p>
-
       <form id="register-form" class="bg-white p-4 rounded-lg shadow-lg">
         <div class="mb-4">
           <label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
@@ -43,13 +41,11 @@
       </form>
     </div>
   </section>
-
   <footer class="bg-blue-600 text-white py-6">
     <div class="container mx-auto text-center">
       <p>© 2025 EmoTeen. Todos os direitos reservados.</p>
     </div>
   </footer>
-
   <script>
     document.getElementById('register-form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -58,8 +54,7 @@
         const response = await fetch('https://EarlySunnyCarrier.gota7.repl.co/register.php', {
           method: 'POST',
           headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            // Não defina 'Content-Type' manualmente para FormData; o navegador define automaticamente
+            'X-Requested-With': 'XMLHttpRequest'
           },
           body: formData
         });
