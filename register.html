@@ -84,45 +84,45 @@
   </footer>
 
   <script type="text/javascript">
-    // Validação do formulário
-    const registerForm = document.getElementById('register-form');
+  // Validação do formulário
+  const registerForm = document.getElementById('register-form');
 
-    registerForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const nome = document.getElementById('nome').value;
-      const escola = document.getElementById('escola').value;
-      const turma = document.getElementById('turma').value;
-      const turno = document.getElementById('turno').value;
-      const email = document.getElementById('email').value;
-      const telefone = document.getElementById('telefone').value;
-      const telefoneResponsavel = document.getElementById('telefone-responsavel').value;
-      const password = document.getElementById('password').value;
+  registerForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nome = document.getElementById('nome').value;
+    const escola = document.getElementById('escola').value;
+    const turma = document.getElementById('turma').value;
+    const turno = document.getElementById('turno').value;
+    const email = document.getElementById('email').value;
+    const telefone = document.getElementById('telefone').value;
+    const telefoneResponsavel = document.getElementById('telefone-responsavel').value;
+    const password = document.getElementById('password').value;
 
-      // Validação do telefone (apenas números, mínimo 10 dígitos recomendado)
-      const phoneRegex = /^[0-9]+$/;
-      if (!phoneRegex.test(telefone) || !phoneRegex.test(telefoneResponsavel)) {
-        alert('Os números de telefone devem conter apenas dígitos.');
-        return;
-      }
-      if (telefone.length < 10 || telefoneResponsavel.length < 10) {
-        alert('Os números de telefone devem ter pelo menos 10 dígitos para serem válidos.');
-        return;
-      }
+    // Validação do telefone (apenas números, mínimo 10 dígitos recomendado)
+    const phoneRegex = /^[0-9]+$/;
+    if (!phoneRegex.test(telefone) || !phoneRegex.test(telefoneResponsavel)) {
+      alert('Os números de telefone devem conter apenas dígitos.');
+      return;
+    }
+    if (telefone.length < 10 || telefoneResponsavel.length < 10) {
+      alert('Os números de telefone devem ter pelo menos 10 dígitos para serem válidos.');
+      return;
+    }
 
-      // Simulação de cadastro (Firebase será implementado depois)
-      console.log({
-        nome,
-        escola,
-        turma,
-        turno,
-        email,
-        telefone,
-        telefoneResponsavel,
-        password/pab
-      });
-      alert('Cadastro realizado com sucesso! Você será redirecionado para o login.');
-      window.location.href = 'login.html';
+    // Simulação de cadastro (Firebase será implementado depois)
+    console.log({
+      nome,
+      escola,
+      turma,
+      turno,
+      email,
+      telefone,
+      telefoneResponsavel,
+      password
     });
-  </script>
+    alert('Cadastro realizado com sucesso! Você será redirecionado para o quiz.');
+    window.location.href = 'quiz.html';
+  });
+</script>
 </body>
 </html>
